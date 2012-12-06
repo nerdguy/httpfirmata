@@ -150,13 +150,13 @@ This is not intended to be used in production or anywhere publicly accessible.
                 "board_pk": "1",
                 "type": "digital",
                 "number": 13,
-                "value": 1,
+                "value": 1.0,
                 "mode": "output"
             }
 
     * `GET`: read the pin's value
 
-        `curl http://localhost:8000/boards/1/3/`
+        `curl http://localhost:8000/boards/1/13/`
 
         response:
 
@@ -172,8 +172,8 @@ This is not intended to be used in production or anywhere publicly accessible.
                 "board_pk": "1",
                 "type": "digital",
                 "number": 3,
-                "value": 0.20000000000000001,
-                "mode": "pwm"
+                "value": 1.0,
+                "mode": "output"
             }
 
 ## License
