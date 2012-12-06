@@ -1,11 +1,29 @@
 import cherrypy
 import json
+import glob
 
 from serial.serialutil import SerialException
 from serializer import ModelsEncoder, json_error, json_404
 from models import Board
 from storage import boards
 from exception import InvalidConfigurationException
+
+
+class PortResource(object):
+    exposed = True
+
+    def _set_headers(self):
+        cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
+        cherrypy.response.headers['Allow'] = 'GET, OPTIONS'
+
+    def OPTIONS(self):
+        self._set_headers()
+        return cherrypy.response.headers['Allow']
+
+    def GET(self):
+        self._set_headers()
+        ports = glob.glob('/dev/cu.*')
+        return json.dumps(ports)
 
 
 class BoardResource(object):

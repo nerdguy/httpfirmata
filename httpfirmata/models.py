@@ -98,7 +98,6 @@ class Pin(SerializableModel):
         return resp
 
 
-
 class Board(SerializableModel):
     pk = None
     port = None

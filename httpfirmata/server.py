@@ -1,5 +1,5 @@
 import cherrypy
-from resources import BoardResource
+from resources import PortResource, BoardResource
 
 
 conf = {
@@ -17,6 +17,7 @@ class Root(object):
     pass
 
 root = Root()
+root.ports = PortResource()
 root.boards = BoardResource()
 
 

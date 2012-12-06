@@ -8,6 +8,28 @@ Requires [PyFirmata](https://bitbucket.org/tino/pyfirmata/src/).
 
 ## Endpoints
 
+* `/ports/`
+
+    * `GET`: returns a list of potential ports for the Arduino.
+
+        `curl http://localhost:8000/ports/`
+
+        response:
+
+            HTTP/1.1 200 OK
+            Content-Length: 82
+            Server: CherryPy/3.2.2
+            Allow: GET, OPTIONS
+            Access-Control-Allow-Origin: *
+            Content-Type: text/html;charset=utf-8
+            Connection: close
+
+            [
+                "/dev/cu.Bluetooth-PDA-Sync",
+                "/dev/cu.Bluetooth-Modem",
+                "/dev/cu.usbmodemfa141"
+            ]
+
 * `/boards/`
 
     * `PUT`: Connect a board
