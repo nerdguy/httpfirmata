@@ -138,21 +138,21 @@ This is not intended to be used in production or anywhere publicly accessible.
 
         response:
 
-        HTTP/1.1 200 OK
-        Content-Length: 107
-        Server: CherryPy/3.2.2
-        Allow: GET, POST
-        Access-Control-Allow-Origin: *
-        Content-Type: text/html;charset=utf-8
-        Connection: close
+            HTTP/1.1 200 OK
+            Content-Length: 107
+            Server: CherryPy/3.2.2
+            Allow: GET, POST
+            Access-Control-Allow-Origin: *
+            Content-Type: text/html;charset=utf-8
+            Connection: close
 
-        {
-            "board_pk": "1",
-            "type": "digital",
-            "number": 13,
-            "value": 1,
-            "mode": "output"
-        }
+            {
+                "board_pk": "1",
+                "type": "digital",
+                "number": 13,
+                "value": 1,
+                "mode": "output"
+            }
 
     * `GET`: read the pin's value
 
