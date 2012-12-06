@@ -27,7 +27,7 @@ Requires [PyFirmata](https://bitbucket.org/tino/pyfirmata/src/).
             [
                 "/dev/cu.Bluetooth-PDA-Sync",
                 "/dev/cu.Bluetooth-Modem",
-                "/dev/cu.usbmodemfa141"
+                "/dev/cu.usbmodemfd131"
             ]
 
 * `/boards/`
