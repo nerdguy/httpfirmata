@@ -160,21 +160,21 @@ This is not intended to be used in production or anywhere publicly accessible.
 
         response:
 
-        HTTP/1.1 200 OK
-        Content-Length: 78
-        Server: CherryPy/3.2.2
-        Allow: GET, POST
-        Access-Control-Allow-Origin: *
-        Content-Type: text/html;charset=utf-8
-        Connection: close
+            HTTP/1.1 200 OK
+            Content-Length: 78
+            Server: CherryPy/3.2.2
+            Allow: GET, POST
+            Access-Control-Allow-Origin: *
+            Content-Type: text/html;charset=utf-8
+            Connection: close
 
-        {
-            "board_pk": "1",
-            "type": "digital",
-            "number": 3,
-            "value": 0.20000000000000001,
-            "mode": "pwm"
-        }
+            {
+                "board_pk": "1",
+                "type": "digital",
+                "number": 3,
+                "value": 0.20000000000000001,
+                "mode": "pwm"
+            }
 
 ## License
 
