@@ -4,6 +4,8 @@ A CherryPy server with an API that talks Firmata to Arduino
 
 This is not intended to be used in production or anywhere publicly accessible. 
 
+Requires [PyFirmata](https://bitbucket.org/tino/pyfirmata/src/)
+
 ## Endpoints
 
 * `/boards/`
