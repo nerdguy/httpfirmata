@@ -19,6 +19,3 @@ class Root(object):
 root = Root()
 root.ports = PortResource()
 root.boards = BoardResource()
-
-
-cherrypy.quickstart(root, '/', conf)

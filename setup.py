@@ -23,6 +23,7 @@ setup(
     author_email = 'guynerd56@gmail.com',
     packages = ['httpfirmata'],
     include_package_data = False,
+    scripts = ['httpfirmata/bin/httpfirmata-run.py'],
     classifiers = [
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',

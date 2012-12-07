@@ -6,6 +6,10 @@ This is not intended to be used in production or anywhere publicly accessible.
 
 Requires [PyFirmata](https://bitbucket.org/tino/pyfirmata/src/).
 
+## Usage
+
+Run `httpfirmata_run.py` from the `bin` directory.
+
 ## Endpoints
 
 * `/ports/`
