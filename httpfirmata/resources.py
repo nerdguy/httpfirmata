@@ -16,11 +16,11 @@ class PortResource(object):
         cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
         cherrypy.response.headers['Allow'] = 'GET, OPTIONS'
 
-    def OPTIONS(self):
+    def OPTIONS(self, *args, **kwargs):
         self._set_headers()
         return cherrypy.response.headers['Allow']
 
-    def GET(self):
+    def GET(self, *args, **kwargs):
         self._set_headers()
         ports = glob.glob('/dev/cu.*')
         return json.dumps(ports)
@@ -45,12 +45,12 @@ class BoardResource(object):
         cherrypy.response.headers['Allow'] = ', '.join(options)
 
     @cherrypy.popargs('board_pk', 'pin_number')
-    def OPTIONS(self, board_pk=None, pin_number=None):
+    def OPTIONS(self, board_pk=None, pin_number=None, *args, **kwargs):
         self._set_headers(board_pk=board_pk, pin_number=pin_number)
         return cherrypy.response.headers['Allow']
 
     @cherrypy.popargs('board_pk', 'pin_number')
-    def GET(self, board_pk=None, pin_number=None):
+    def GET(self, board_pk=None, pin_number=None, *args, **kwargs):
         self._set_headers(board_pk=board_pk, pin_number=pin_number)
 
         if board_pk is None:
@@ -61,7 +61,7 @@ class BoardResource(object):
             return board.pins[pin_number].to_json()
         return board.to_json()
 
-    def PUT(self):
+    def PUT(self, *args, **kwargs):
         self._set_headers()
 
         board_pk = str(len(boards) + 1)
@@ -79,7 +79,7 @@ class BoardResource(object):
         return self.content.to_json()
 
     @cherrypy.popargs('board_pk', 'pin_number')
-    def POST(self, board_pk=None, pin_number=None):
+    def POST(self, board_pk=None, pin_number=None, *args, **kwargs):
         self._set_headers(board_pk=board_pk, pin_number=pin_number)
 
         if board_pk is None or pin_number is None:
@@ -103,7 +103,7 @@ class BoardResource(object):
             return pin.to_json()
 
     @cherrypy.popargs('board_pk')
-    def DELETE(self, board_pk=None):
+    def DELETE(self, board_pk=None, *args, **kwargs):
         self._set_headers(board_pk=board_pk)
 
         if board_pk is None:
