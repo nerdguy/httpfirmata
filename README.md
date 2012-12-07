@@ -107,6 +107,7 @@ Run `httpfirmata_run.py` from the `bin` directory.
                     "port": "/dev/cu.usbmodemfd131"
                 }
             ]
+
 * `/boards/<board_id>/`
 
     * `GET`: Retrieves informations about the board's pins.
@@ -144,6 +145,7 @@ Run `httpfirmata_run.py` from the `bin` directory.
                 "pk": "1",
                 "port": "/dev/cu.usbmodemfd131"
             }
+
     * `DELETE`: remove the board from the board list
 
         `curl -x DELETE http://localhost:8000/boards/1/`
