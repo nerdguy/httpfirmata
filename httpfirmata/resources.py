@@ -15,6 +15,9 @@ class PortResource(object):
     def _set_headers(self):
         cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
         cherrypy.response.headers['Allow'] = 'GET, OPTIONS'
+        cherrypy.response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+        cherrypy.response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        cherrypy.response.headers['Content-Type'] = 'application/json'
 
     def OPTIONS(self, *args, **kwargs):
         self._set_headers()
@@ -42,7 +45,10 @@ class BoardResource(object):
         if pin_number is not None:
             options = ['GET', 'POST']
         cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
+        cherrypy.response.headers['Access-Control-Allow-Methods'] = ', '.join(options)
+        cherrypy.response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
         cherrypy.response.headers['Allow'] = ', '.join(options)
+        cherrypy.response.headers['Content-Type'] = 'application/json'
 
     @cherrypy.popargs('board_pk', 'pin_number')
     def OPTIONS(self, board_pk=None, pin_number=None, *args, **kwargs):

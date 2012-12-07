@@ -25,7 +25,9 @@ Run `httpfirmata_run.py` from the `bin` directory.
             Server: CherryPy/3.2.2
             Allow: GET, OPTIONS
             Access-Control-Allow-Origin: *
-            Content-Type: text/html;charset=utf-8
+            Access-Control-Allow-Methods: GET, OPTIONS
+            Access-Control-Allow-Headers: Content-Type
+            Content-Type: application/json
             Connection: close
 
             [
@@ -44,8 +46,11 @@ Run `httpfirmata_run.py` from the `bin` directory.
 
             HTTP/1.1 201 Created
             Content-Length: 1102
-            Content-Type: text/html;charset=utf-8
+            Content-Type: application/json
             Allow: GET, PUT
+            Access-Control-Allow-Origin: *
+            Access-Control-Allow-Methods: GET, PUT
+            Access-Control-Allow-Headers: Content-Type
             Server: CherryPy/3.2.2
             Connection: close
 
@@ -81,7 +86,9 @@ Run `httpfirmata_run.py` from the `bin` directory.
             Server: CherryPy/3.2.2
             Allow: GET, PUT
             Access-Control-Allow-Origin: *
-            Content-Type: text/html;charset=utf-8
+            Access-Control-Allow-Methods: GET, PUT
+            Access-Control-Allow-Headers: Content-Type
+            Content-Type: application/json
             Connection: close
 
             [
@@ -121,7 +128,9 @@ Run `httpfirmata_run.py` from the `bin` directory.
             Server: CherryPy/3.2.2
             Allow: GET, DELETE
             Access-Control-Allow-Origin: *
-            Content-Type: text/html;charset=utf-8
+            Access-Control-Allow-Methods: GET, DELETE
+            Access-Control-Allow-Headers: Content-Type
+            Content-Type: application/json
             Connection: close
 
             {
@@ -157,7 +166,9 @@ Run `httpfirmata_run.py` from the `bin` directory.
             Server: CherryPy/3.2.2
             Allow: GET, DELETE
             Access-Control-Allow-Origin: *
-            Content-Type: text/html;charset=utf-8
+            Access-Control-Allow-Methods: GET, DELETE
+            Access-Control-Allow-Headers: Content-Type
+            Content-Type: application/json
             Connection: close
 
 * `/boards/<board_id>/<pin_id>/`
@@ -173,7 +184,9 @@ Run `httpfirmata_run.py` from the `bin` directory.
             Server: CherryPy/3.2.2
             Allow: GET, POST
             Access-Control-Allow-Origin: *
-            Content-Type: text/html;charset=utf-8
+            Access-Control-Allow-Methods: GET, POST
+            Access-Control-Allow-Headers: Content-Type
+            Content-Type: application/json
             Connection: close
 
             {
@@ -195,7 +208,9 @@ Run `httpfirmata_run.py` from the `bin` directory.
             Server: CherryPy/3.2.2
             Allow: GET, POST
             Access-Control-Allow-Origin: *
-            Content-Type: text/html;charset=utf-8
+            Access-Control-Allow-Methods: GET, POST
+            Access-Control-Allow-Headers: Content-Type
+            Content-Type: application/json
             Connection: close
 
             {
