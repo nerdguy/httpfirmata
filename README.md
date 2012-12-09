@@ -40,7 +40,7 @@ Run `httpfirmata_run.py` from the `bin` directory.
 
     * `PUT`: Connect a board
 
-        `curl -x PUT http://localhost:8000/boards/ --data '{"port": "/dev/cu.usbmodemfd131"}'`
+        `curl -x PUT http://localhost:8000/boards/ -H 'Content-Type: application/json' --data '{"port": "/dev/cu.usbmodemfd131"}'`
 
         response:
 
@@ -175,7 +175,7 @@ Run `httpfirmata_run.py` from the `bin` directory.
 
     * `POST`: write to the pin
 
-        `curl -x POST http://localhost:8000/boards/1/13/ --data '{"type": "digital", "mode": "output", "value": 1}'`
+        `curl -x POST http://localhost:8000/boards/1/13/ -H 'Content-Type: application/json' --data '{"type": "digital", "mode": "output", "value": 1}'`
 
         response:
 

@@ -50,6 +50,11 @@ class BoardResource(object):
         cherrypy.response.headers['Allow'] = ', '.join(options)
         cherrypy.response.headers['Content-Type'] = 'application/json'
 
+    def _payload(self, *args, **kwargs):
+        if cherrypy.request.headers['Content-Type'] == 'application/json':
+            return json.loads(cherrypy.request.body.read())
+        return kwargs
+
     @cherrypy.popargs('board_pk', 'pin_number')
     def OPTIONS(self, board_pk=None, pin_number=None, *args, **kwargs):
         self._set_headers(board_pk=board_pk, pin_number=pin_number)
@@ -69,9 +74,8 @@ class BoardResource(object):
 
     def PUT(self, *args, **kwargs):
         self._set_headers()
-
         board_pk = str(len(boards) + 1)
-        data = json.loads(cherrypy.request.body.read())
+        data = self._payload(*args, **kwargs)
 
         try:
             board = Board(pk=board_pk, **data)
@@ -92,7 +96,7 @@ class BoardResource(object):
             cherrypy.response.status = 400
             return json_error('Board and/or Pin need to be specified.')
         # set the pin
-        data = json.loads(cherrypy.request.body.read())
+        data = self._payload(*args, **kwargs)
         value = float(data['value'])
         mode = data.get('mode')
         type = data.get('type')
