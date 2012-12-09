@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 
 from pyfirmata import Arduino
 from exception import InvalidPinException, InvalidConfigurationException
@@ -82,6 +81,7 @@ class Pin(SerializableModel):
         if pin is not None and self.mode != 'input':
             pin.write(value)
             self.release()
+            self.board.written_pins.add(self)
             return
         raise InvalidPinException
 
@@ -103,6 +103,7 @@ class Board(SerializableModel):
     port = None
     pins = None
     name = None
+    written_pins = set()
 
     json_export = ('pk', 'port', 'pins')
 
@@ -119,6 +120,8 @@ class Board(SerializableModel):
         self.disconnect()
 
     def disconnect(self):
+        for pin in self.written_pins:
+            pin.write(0)
         return self._board.exit()
 
     def to_json(self):
