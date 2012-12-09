@@ -110,10 +110,16 @@ class Board(SerializableModel):
         self.pk = pk
         self.port = port
         self._board = Arduino(self.port)
-        self.pins = dict(((str(i), Pin(pk, i)) for i in range(1, 14)))
+        self.pins = dict(((str(i), Pin(pk, i)) for i in range(14)))
 
         [setattr(self, k, v) for k, v in kwargs.items()]
         super(Board, self).__init__(*args, **kwargs)
+
+    def __del__(self):
+        self.disconnect()
+
+    def disconnect(self):
+        return self._board.exit()
 
     def to_json(self):
         from serializer import ModelsEncoder

@@ -155,7 +155,7 @@ Run `httpfirmata_run.py` from the `bin` directory.
                 "port": "/dev/cu.usbmodemfd131"
             }
 
-    * `DELETE`: remove the board from the board list
+    * `DELETE`: disconnects the board and removes it from the board list.
 
         `curl -x DELETE http://localhost:8000/boards/1/`
 

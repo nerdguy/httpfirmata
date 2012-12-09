@@ -3,10 +3,25 @@ import json
 import glob
 
 from serial.serialutil import SerialException
-from serializer import ModelsEncoder, json_error, json_404
+from serializer import ModelsEncoder
 from models import Board
 from storage import boards
-from exception import InvalidConfigurationException
+from exception import InvalidConfigurationException, json_error
+from cherrypy import _cperror
+
+
+def error_page_404(status, message, traceback, version):
+    return message
+cherrypy.config.update({'error_page.404': error_page_404})
+
+
+def error_page_400(status, message, traceback, version):
+    return message
+cherrypy.config.update({'error_page.400': error_page_404})
+
+
+class Root(object):
+    pass
 
 
 class PortResource(object):
@@ -35,8 +50,7 @@ class BoardResource(object):
     def _get_board(self, board_pk):
         if board_pk in boards:
             return boards[board_pk]
-        cherrypy.response.status = 404
-        return json_404()
+        raise _cperror.HTTPError(404, json_error("Board not found"))
 
     def _set_headers(self, board_pk=None, pin_number=None):
         options = ['GET', 'PUT']
@@ -80,8 +94,7 @@ class BoardResource(object):
         try:
             board = Board(pk=board_pk, **data)
         except SerialException:
-            cherrypy.response.status = 400
-            return json_error("Port not valid.")
+            raise _cperror.HTTPError(400, json_error("Port not valid."))
 
         self.content = board
         boards[board_pk] = self.content
@@ -94,7 +107,7 @@ class BoardResource(object):
 
         if board_pk is None or pin_number is None:
             cherrypy.response.status = 400
-            return json_error('Board and/or Pin need to be specified.')
+            raise _cperror.HTTPError(400, json_error("Board and/or Pin need to be specified."))
         # set the pin
         data = self._payload(*args, **kwargs)
         value = float(data['value'])
@@ -107,7 +120,7 @@ class BoardResource(object):
             pin.setup(mode=mode, type=type)
         except InvalidConfigurationException:
             cherrypy.response.status = 400
-            return json_error('Pin can\'t be analog AND pwm at the same time.')
+            raise _cperror.HTTPError(400, json_error("Pin can\'t be analog AND pwm at the same time."))
         else:
             pin.write(value)
             return pin.to_json()
@@ -118,7 +131,8 @@ class BoardResource(object):
 
         if board_pk is None:
             cherrypy.response.status = 400
-            return json_error('Board need to be specified.')
+            raise _cperror.HTTPError(400, json_error("Board need to be specified."))
         board = self._get_board(board_pk)
+        board.disconnect()
         boards.pop(board.pk)
         cherrypy.response.status = 204
