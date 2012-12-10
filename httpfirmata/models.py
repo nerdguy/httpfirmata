@@ -80,6 +80,7 @@ class Pin(SerializableModel):
         pin = self.board.firmata_pin(self.identifier)
         if pin is not None and self.mode != 'input':
             pin.write(value)
+            self._value = value
             self.release()
             self.board.written_pins.add(self)
             return
@@ -87,6 +88,8 @@ class Pin(SerializableModel):
 
     @property
     def value(self):
+        if self.mode == 'pwm':
+            return self._value
         if self.active:
             pin = self.board.firmata_pin(self.identifier)
             return pin.value
