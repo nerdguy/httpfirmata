@@ -79,10 +79,12 @@ class Pin(SerializableModel):
     def write(self, value):
         pin = self.board.firmata_pin(self.identifier)
         if pin is not None and self.mode != 'input':
-            pin.write(value)
-            self._value = value
-            self.release()
-            self.board.written_pins.add(self)
+            try:
+                pin.write(value)
+                self._value = value
+                self.board.written_pins.add(self)
+            finally:
+                self.release()
             return
         raise InvalidPinException
 
