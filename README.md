@@ -62,7 +62,8 @@ Run `httpfirmata_run.py` from the `bin` directory.
                             "type": "analog",
                             "number": 5,
                             "value": null,
-                            "mode": null
+                            "mode": null,
+                            "url": "/boards/1/analog/5/"
                         },
                         [..snip..]
                         "0": {
@@ -70,7 +71,8 @@ Run `httpfirmata_run.py` from the `bin` directory.
                             "type": "analog",
                             "number": 0,
                             "value": null,
-                            "mode": null
+                            "mode": null,
+                            "url": "/boards/1/analog/0/"
                         }
                     },
                     "digital": {
@@ -79,7 +81,8 @@ Run `httpfirmata_run.py` from the `bin` directory.
                             "type": "digital",
                             "number": 13,
                             "value": null,
-                            "mode": null
+                            "mode": null,
+                            "url": "/boards/1/digital/13/"
                         },
                         [..snip..]
                         "0": {
@@ -87,7 +90,8 @@ Run `httpfirmata_run.py` from the `bin` directory.
                             "type": "digital",
                             "number": 0,
                             "value": null,
-                            "mode": null
+                            "mode": null,
+                            "url": "/boards/1/digital/0/"
                         }
                     }
                 },
@@ -119,7 +123,8 @@ Run `httpfirmata_run.py` from the `bin` directory.
                                 "type": "analog",
                                 "number": 5,
                                 "value": null,
-                                "mode": null
+                                "mode": null,
+                                "url": "/boards/1/analog/5/"
                             },
                             [..snip..]
                             "0": {
@@ -127,7 +132,8 @@ Run `httpfirmata_run.py` from the `bin` directory.
                                 "type": "analog",
                                 "number": 0,
                                 "value": null,
-                                "mode": null
+                                "mode": null,
+                                "url": "/boards/1/analog/0/"
                             }
                         },
                         "digital": {
@@ -136,7 +142,8 @@ Run `httpfirmata_run.py` from the `bin` directory.
                                 "type": "digital",
                                 "number": 13,
                                 "value": null,
-                                "mode": null
+                                "mode": null,
+                                "url": "/boards/1/digital/13/"
                             },
                             [..snip..]
                             "0": {
@@ -144,7 +151,8 @@ Run `httpfirmata_run.py` from the `bin` directory.
                                 "type": "digital",
                                 "number": 0,
                                 "value": null,
-                                "mode": null
+                                "mode": null,
+                                "url": "/boards/1/digital/0/"
                             }
                         }
                     },
@@ -180,7 +188,7 @@ Run `httpfirmata_run.py` from the `bin` directory.
                             "number": 5,
                             "value": null,
                             "mode": null,
-                            "idnetifier": "a5"
+                            "url": "/boards/1/analog/5/"
                         },
                         [..snip..]
                         "0": {
@@ -189,7 +197,7 @@ Run `httpfirmata_run.py` from the `bin` directory.
                             "number": 0,
                             "value": null,
                             "mode": null,
-                            "identifier": "a0"
+                            "url": "/boards/1/analog/0/"
                         }
                     },
                     "digital": {
@@ -199,7 +207,7 @@ Run `httpfirmata_run.py` from the `bin` directory.
                             "number": 13,
                             "value": null,
                             "mode": null,
-                            "identifier": "d13"
+                            "url": "/boards/1/digital/13/"
                         },
                         [..snip..]
                         "0": {
@@ -208,7 +216,7 @@ Run `httpfirmata_run.py` from the `bin` directory.
                             "number": 0,
                             "value": null,
                             "mode": null,
-                            "identifier": "d0"
+                            "url": "/boards/1/digital/0/"
                         }
                     }
                 },
@@ -256,7 +264,7 @@ Run `httpfirmata_run.py` from the `bin` directory.
                 "number": 13,
                 "value": 1.0,
                 "mode": "output",
-                "identifier": "d13"
+                "url": "/boards/1/digital/13/"
             }
 
     * `GET`: read the pin's value
@@ -281,7 +289,7 @@ Run `httpfirmata_run.py` from the `bin` directory.
                 "number": 13,
                 "value": 1.0,
                 "mode": "output",
-                "identifier": "d13"
+                "url": "/boards/1/digital/13/"
             }
 
 ## License

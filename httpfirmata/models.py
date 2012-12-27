@@ -34,7 +34,7 @@ class Pin(SerializableModel):
     mode = None
     board_pk = None
 
-    json_export = ('number', 'type', 'mode', 'board_pk', 'value', 'identifier')
+    json_export = ('number', 'type', 'mode', 'board_pk', 'value', 'url')
 
     def __init__(self, board_pk, number, type, *args, **kwargs):
         self.board_pk = board_pk
@@ -44,9 +44,11 @@ class Pin(SerializableModel):
 
     @property
     def identifier(self):
-        if self.active:
-            return '%s%d' % (PIN_TYPES[self.type], self.number)
-        raise ValueError
+        return '%s%d' % (PIN_TYPES[self.type], self.number)
+
+    @property
+    def url(self):
+        return "/boards/%s/%s/%d/" % (self.board_pk, self.type, self.number)
 
     @property
     def firmata_identifier(self):
@@ -131,6 +133,10 @@ class Board(SerializableModel):
 
     def __del__(self):
         self.disconnect()
+
+    @property
+    def url(self):
+        return "/boards/%s/" % self.pk
 
     def disconnect(self):
         for pin in self.written_pins:
