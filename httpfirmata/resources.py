@@ -65,9 +65,13 @@ class BoardResource(object):
         cherrypy.response.headers['Content-Type'] = 'application/json'
 
     def _payload(self, *args, **kwargs):
-        if cherrypy.request.headers['Content-Type'] == 'application/json':
+        content_type = cherrypy.request.headers.get('Content-Type')
+        if content_type == 'application/json':
             return json.loads(cherrypy.request.body.read())
-        return kwargs
+        if content_type == 'application/x-www-form-urlencoded':
+            return kwargs
+        cherrypy.response.status = 400
+        raise _cperror.HTTPError(400, json_error("Content-Type header can only be 'application/json' or 'application/x-www-form-urlencoded'"))
 
     @cherrypy.popargs('board_pk', 'pin_number')
     def OPTIONS(self, board_pk=None, pin_number=None, *args, **kwargs):
