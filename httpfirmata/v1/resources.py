@@ -4,10 +4,11 @@ import glob
 
 from serial.serialutil import SerialException
 from serializer import ModelsEncoder
-from models import Board, PIN_TYPES
+from models import Board
 from storage import boards
 from exception import InvalidConfigurationException, json_error
 from cherrypy import _cperror
+from . import API_VERSION
 
 
 def error_page_404(status, message, traceback, version):
@@ -20,14 +21,11 @@ def error_page_400(status, message, traceback, version):
 cherrypy.config.update({'error_page.400': error_page_404})
 
 
-class Root(object):
-    pass
-
-
 class PortResource(object):
     exposed = True
 
     def _set_headers(self):
+        cherrypy.response.headers['X-API-Version'] = API_VERSION
         cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
         cherrypy.response.headers['Allow'] = 'GET, OPTIONS'
         cherrypy.response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
@@ -53,6 +51,8 @@ class BoardResource(object):
         raise _cperror.HTTPError(404, json_error("Board not found"))
 
     def _set_headers(self, board_pk=None, pin_number=None):
+        cherrypy.response.headers['X-API-Version'] = API_VERSION
+
         options = ['GET', 'PUT']
         if board_pk is not None:
             options = ['GET', 'DELETE']
@@ -73,20 +73,13 @@ class BoardResource(object):
         cherrypy.response.status = 400
         raise _cperror.HTTPError(400, json_error("Content-Type header can only be 'application/json' or 'application/x-www-form-urlencoded'"))
 
-    def _check_pin_type(self, pin_type):
-        if pin_type not in PIN_TYPES:
-            cherrypy.response.status = 400
-            raise _cperror.HTTPError(400, json_error("Invalid pin type."))
-
-    @cherrypy.popargs('board_pk', 'pin_type', 'pin_number')
-    def OPTIONS(self, board_pk=None, pin_type=None, pin_number=None, *args, **kwargs):
-        self._check_pin_type(pin_type)
+    @cherrypy.popargs('board_pk', 'pin_number')
+    def OPTIONS(self, board_pk=None, pin_number=None, *args, **kwargs):
         self._set_headers(board_pk=board_pk, pin_number=pin_number)
         return cherrypy.response.headers['Allow']
 
-    @cherrypy.popargs('board_pk', 'pin_type', 'pin_number')
-    def GET(self, board_pk=None, pin_type=None, pin_number=None, *args, **kwargs):
-        self._check_pin_type(pin_type)
+    @cherrypy.popargs('board_pk', 'pin_number')
+    def GET(self, board_pk=None, pin_number=None, *args, **kwargs):
         self._set_headers(board_pk=board_pk, pin_number=pin_number)
 
         if board_pk is None:
@@ -94,7 +87,7 @@ class BoardResource(object):
 
         board = self._get_board(board_pk)
         if pin_number is not None:
-            return board.pins[pin_type][pin_number].to_json()
+            return board.pins[pin_number].to_json()
         return board.to_json()
 
     def PUT(self, *args, **kwargs):
@@ -112,24 +105,23 @@ class BoardResource(object):
         cherrypy.response.status = 201
         return self.content.to_json()
 
-    @cherrypy.popargs('board_pk', 'pin_type', 'pin_number')
-    def POST(self, board_pk=None, pin_type=None, pin_number=None, *args, **kwargs):
-        self._check_pin_type(pin_type)
+    @cherrypy.popargs('board_pk', 'pin_number')
+    def POST(self, board_pk=None, pin_number=None, *args, **kwargs):
         self._set_headers(board_pk=board_pk, pin_number=pin_number)
 
         if board_pk is None or pin_number is None:
             cherrypy.response.status = 400
             raise _cperror.HTTPError(400, json_error("Board and/or Pin need to be specified."))
-
         # set the pin
         data = self._payload(*args, **kwargs)
         value = float(data['value'])
         mode = data.get('mode')
+        type = data.get('type')
 
         board = self._get_board(board_pk)
-        pin = board.pins[pin_type][pin_number]
+        pin = board.pins[pin_number]
         try:
-            pin.setup(mode=mode)
+            pin.setup(mode=mode, type=type)
         except InvalidConfigurationException:
             cherrypy.response.status = 400
             raise _cperror.HTTPError(400, json_error("Pin can\'t be analog AND pwm at the same time."))

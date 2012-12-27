@@ -4,6 +4,7 @@ from pyfirmata import Arduino
 from exception import InvalidPinException, InvalidConfigurationException
 from storage import boards
 from serializer import ModelsEncoder
+from . import API_VERSION
 
 
 class SerializableModel(object):
@@ -48,7 +49,7 @@ class Pin(SerializableModel):
 
     @property
     def url(self):
-        return "/boards/%s/%s/%d/" % (self.board_pk, self.type, self.number)
+        return "/%s/boards/%s/%s/%d/" % (API_VERSION, self.board_pk, self.type, self.number)
 
     @property
     def firmata_identifier(self):
@@ -117,7 +118,7 @@ class Board(SerializableModel):
     name = None
     written_pins = set()
 
-    json_export = ('pk', 'port', 'pins')
+    json_export = ('pk', 'port', 'pins', 'url')
 
     def __init__(self, pk, port, *args, **kwargs):
         self.pk = pk
@@ -136,7 +137,7 @@ class Board(SerializableModel):
 
     @property
     def url(self):
-        return "/boards/%s/" % self.pk
+        return "/%s/boards/%s/" % (API_VERSION, self.pk)
 
     def disconnect(self):
         for pin in self.written_pins:
