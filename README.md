@@ -56,20 +56,39 @@ Run `httpfirmata_run.py` from the `bin` directory.
 
             {
                 "pins": {
-                    "11": {
-                        "board_pk": "1",
-                        "type": null,
-                        "number": 11,
-                        "value": null,
-                        "mode": null
+                    "analog": {
+                        "5": {
+                            "board_pk": "1",
+                            "type": "analog",
+                            "number": 5,
+                            "value": null,
+                            "mode": null
+                        },
+                        [..snip..]
+                        "0": {
+                            "board_pk": "1",
+                            "type": "analog",
+                            "number": 0,
+                            "value": null,
+                            "mode": null
+                        }
                     },
-                    [..snip..]
-                    "8": {
-                        "board_pk": "1",
-                        "type": null,
-                        "number": 8,
-                        "value": null,
-                        "mode": null
+                    "digital": {
+                        "13": {
+                            "board_pk": "1",
+                            "type": "digital",
+                            "number": 13,
+                            "value": null,
+                            "mode": null
+                        },
+                        [..snip..]
+                        "0": {
+                            "board_pk": "1",
+                            "type": "digital",
+                            "number": 0,
+                            "value": null,
+                            "mode": null
+                        }
                     }
                 },
                 "pk": "1",
@@ -94,20 +113,39 @@ Run `httpfirmata_run.py` from the `bin` directory.
             [
                 {
                     "pins": {
-                        "11": {
-                            "board_pk": "1",
-                            "type": null,
-                            "number": 11,
-                            "value": null,
-                            "mode": null
+                        "analog": {
+                            "5": {
+                                "board_pk": "1",
+                                "type": "analog",
+                                "number": 5,
+                                "value": null,
+                                "mode": null
+                            },
+                            [..snip..]
+                            "0": {
+                                "board_pk": "1",
+                                "type": "analog",
+                                "number": 0,
+                                "value": null,
+                                "mode": null
+                            }
                         },
-                        [..snip..]
-                        "8": {
-                            "board_pk": "1",
-                            "type": null,
-                            "number": 8,
-                            "value": null,
-                            "mode": null
+                        "digital": {
+                            "13": {
+                                "board_pk": "1",
+                                "type": "digital",
+                                "number": 13,
+                                "value": null,
+                                "mode": null
+                            },
+                            [..snip..]
+                            "0": {
+                                "board_pk": "1",
+                                "type": "digital",
+                                "number": 0,
+                                "value": null,
+                                "mode": null
+                            }
                         }
                     },
                     "pk": "1",
@@ -135,20 +173,43 @@ Run `httpfirmata_run.py` from the `bin` directory.
 
             {
                 "pins": {
-                    "11": {
-                        "board_pk": "1",
-                        "type": null,
-                        "number": 11,
-                        "value": null,
-                        "mode": null
+                    "analog": {
+                        "5": {
+                            "board_pk": "1",
+                            "type": "analog",
+                            "number": 5,
+                            "value": null,
+                            "mode": null,
+                            "idnetifier": "a5"
+                        },
+                        [..snip..]
+                        "0": {
+                            "board_pk": "1",
+                            "type": "analog",
+                            "number": 0,
+                            "value": null,
+                            "mode": null,
+                            "identifier": "a0"
+                        }
                     },
-                    [..snip..]
-                    "8": {
-                        "board_pk": "1",
-                        "type": null,
-                        "number": 8,
-                        "value": null,
-                        "mode": null
+                    "digital": {
+                        "13": {
+                            "board_pk": "1",
+                            "type": "digital",
+                            "number": 13,
+                            "value": null,
+                            "mode": null,
+                            "identifier": "d13"
+                        },
+                        [..snip..]
+                        "0": {
+                            "board_pk": "1",
+                            "type": "digital",
+                            "number": 0,
+                            "value": null,
+                            "mode": null,
+                            "identifier": "d0"
+                        }
                     }
                 },
                 "pk": "1",
@@ -171,11 +232,11 @@ Run `httpfirmata_run.py` from the `bin` directory.
             Content-Type: application/json
             Connection: close
 
-* `/boards/<board_id>/<pin_id>/`
+* `/boards/<board_id>/<pin_identifier>/`
 
     * `POST`: write to the pin
 
-        `curl -x POST http://localhost:8000/boards/1/13/ -H 'Content-Type: application/json' --data '{"type": "digital", "mode": "output", "value": 1}'`
+        `curl -x POST http://localhost:8000/boards/1/d13/ -H 'Content-Type: application/json' --data '{"mode": "output", "value": 1}'`
 
         response:
 
@@ -194,12 +255,13 @@ Run `httpfirmata_run.py` from the `bin` directory.
                 "type": "digital",
                 "number": 13,
                 "value": 1.0,
-                "mode": "output"
+                "mode": "output",
+                "identifier": "d13"
             }
 
     * `GET`: read the pin's value
 
-        `curl http://localhost:8000/boards/1/13/`
+        `curl http://localhost:8000/boards/1/d13/`
 
         response:
 
@@ -216,9 +278,10 @@ Run `httpfirmata_run.py` from the `bin` directory.
             {
                 "board_pk": "1",
                 "type": "digital",
-                "number": 3,
+                "number": 13,
                 "value": 1.0,
-                "mode": "output"
+                "mode": "output",
+                "identifier": "d13"
             }
 
 ## License

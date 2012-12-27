@@ -34,15 +34,22 @@ class Pin(SerializableModel):
     mode = None
     board_pk = None
 
-    json_export = ('number', 'type', 'mode', 'board_pk', 'value')
+    json_export = ('number', 'type', 'mode', 'board_pk', 'value', 'identifier')
 
-    def __init__(self, board_pk, number, *args, **kwargs):
+    def __init__(self, board_pk, number, type, *args, **kwargs):
         self.board_pk = board_pk
         self.number = number
+        self.type = type
         super(Pin, self).__init__(*args, **kwargs)
 
     @property
     def identifier(self):
+        if self.active:
+            return '%s%d' % (PIN_TYPES[self.type], self.number)
+        raise ValueError
+
+    @property
+    def firmata_identifier(self):
         if self.active:
             return '%s:%d:%s' % (PIN_TYPES[self.type], self.number, PIN_MODES[self.mode])
         raise ValueError
@@ -57,27 +64,25 @@ class Pin(SerializableModel):
 
     def release(self):
         if self.active:
-            self.board.release_pin(self.identifier)
+            self.board.release_pin(self.firmata_identifier)
 
-    def setup(self, type=None, mode=None):
-        if type == 'analog' and mode == 'pwm':
+    def setup(self, mode=None):
+        if self.type == 'analog' and mode == 'pwm':
             raise InvalidConfigurationException
 
-        if type is not None:
-            self.type = type
         if mode is not None:
             self.mode = mode
 
     def read(self):
         if self.mode == 'output':
             return None
-        pin = self.board.firmata_pin(self.identifier)
+        pin = self.board.firmata_pin(self.firmata_identifier)
         if pin is not None:
             return pin.read()
         return None
 
     def write(self, value):
-        pin = self.board.firmata_pin(self.identifier)
+        pin = self.board.firmata_pin(self.firmata_identifier)
         if pin is not None and self.mode != 'input':
             try:
                 pin.write(value)
@@ -93,7 +98,7 @@ class Pin(SerializableModel):
         if self.mode == 'pwm':
             return self._value
         if self.active:
-            pin = self.board.firmata_pin(self.identifier)
+            pin = self.board.firmata_pin(self.firmata_identifier)
             return pin.value
         return None
 
@@ -116,7 +121,10 @@ class Board(SerializableModel):
         self.pk = pk
         self.port = port
         self._board = Arduino(self.port)
-        self.pins = dict(((str(i), Pin(pk, i)) for i in range(14)))
+        self.pins = {
+            'analog': dict(((str(i), Pin(pk, i, type='analog')) for i in range(6))),
+            'digital': dict(((str(i), Pin(pk, i, type='digital')) for i in range(14)))
+        }
 
         [setattr(self, k, v) for k, v in kwargs.items()]
         super(Board, self).__init__(*args, **kwargs)
@@ -134,11 +142,16 @@ class Board(SerializableModel):
 
         return json.dumps(self, cls=ModelsEncoder)
 
-    def firmata_pin(self, identifier):
-        return self._board.get_pin(identifier)
+    def get_pin(self, identifier):
+        a_d = identifier[0] == 'a' and 'analog' or 'digital'
+        pin_nr = int(identifier[1:])
+        return self.pins[a_d][pin_nr]
 
-    def release_pin(self, identifier):
-        bits = identifier.split(':')
+    def firmata_pin(self, firmata_identifier):
+        return self._board.get_pin(firmata_identifier)
+
+    def release_pin(self, firmata_identifier):
+        bits = firmata_identifier.split(':')
         a_d = bits[0] == 'a' and 'analog' or 'digital'
         pin_nr = int(bits[1])
         self._board.taken[a_d][pin_nr] = False

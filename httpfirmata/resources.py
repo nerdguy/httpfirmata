@@ -52,11 +52,11 @@ class BoardResource(object):
             return boards[board_pk]
         raise _cperror.HTTPError(404, json_error("Board not found"))
 
-    def _set_headers(self, board_pk=None, pin_number=None):
+    def _set_headers(self, board_pk=None, pin_identifier=None):
         options = ['GET', 'PUT']
         if board_pk is not None:
             options = ['GET', 'DELETE']
-        if pin_number is not None:
+        if pin_identifier is not None:
             options = ['GET', 'POST']
         cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
         cherrypy.response.headers['Access-Control-Allow-Methods'] = ', '.join(options)
@@ -69,21 +69,21 @@ class BoardResource(object):
             return json.loads(cherrypy.request.body.read())
         return kwargs
 
-    @cherrypy.popargs('board_pk', 'pin_number')
-    def OPTIONS(self, board_pk=None, pin_number=None, *args, **kwargs):
-        self._set_headers(board_pk=board_pk, pin_number=pin_number)
+    @cherrypy.popargs('board_pk', 'pin_identifier')
+    def OPTIONS(self, board_pk=None, pin_identifier=None, *args, **kwargs):
+        self._set_headers(board_pk=board_pk, pin_identifier=pin_identifier)
         return cherrypy.response.headers['Allow']
 
-    @cherrypy.popargs('board_pk', 'pin_number')
-    def GET(self, board_pk=None, pin_number=None, *args, **kwargs):
-        self._set_headers(board_pk=board_pk, pin_number=pin_number)
+    @cherrypy.popargs('board_pk', 'pin_identifier')
+    def GET(self, board_pk=None, pin_identifier=None, *args, **kwargs):
+        self._set_headers(board_pk=board_pk, pin_identifier=pin_identifier)
 
         if board_pk is None:
             return json.dumps(boards.values(), cls=ModelsEncoder)
 
         board = self._get_board(board_pk)
-        if pin_number is not None:
-            return board.pins[pin_number].to_json()
+        if pin_identifier is not None:
+            return board.get_pin(pin_identifier).to_json()
         return board.to_json()
 
     def PUT(self, *args, **kwargs):
@@ -101,23 +101,22 @@ class BoardResource(object):
         cherrypy.response.status = 201
         return self.content.to_json()
 
-    @cherrypy.popargs('board_pk', 'pin_number')
-    def POST(self, board_pk=None, pin_number=None, *args, **kwargs):
-        self._set_headers(board_pk=board_pk, pin_number=pin_number)
+    @cherrypy.popargs('board_pk', 'pin_identifier')
+    def POST(self, board_pk=None, pin_identifier=None, *args, **kwargs):
+        self._set_headers(board_pk=board_pk, pin_identifier=pin_identifier)
 
-        if board_pk is None or pin_number is None:
+        if board_pk is None or pin_identifier is None:
             cherrypy.response.status = 400
             raise _cperror.HTTPError(400, json_error("Board and/or Pin need to be specified."))
         # set the pin
         data = self._payload(*args, **kwargs)
         value = float(data['value'])
         mode = data.get('mode')
-        type = data.get('type')
 
         board = self._get_board(board_pk)
-        pin = board.pins[pin_number]
+        pin = board.get_pin(pin_identifier)
         try:
-            pin.setup(mode=mode, type=type)
+            pin.setup(mode=mode)
         except InvalidConfigurationException:
             cherrypy.response.status = 400
             raise _cperror.HTTPError(400, json_error("Pin can\'t be analog AND pwm at the same time."))
