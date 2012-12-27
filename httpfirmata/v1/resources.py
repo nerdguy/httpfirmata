@@ -8,6 +8,7 @@ from models import Board
 from storage import boards
 from exception import InvalidConfigurationException, json_error
 from cherrypy import _cperror
+from . import API_VERSION
 
 
 def error_page_404(status, message, traceback, version):
@@ -20,14 +21,11 @@ def error_page_400(status, message, traceback, version):
 cherrypy.config.update({'error_page.400': error_page_404})
 
 
-class Root(object):
-    pass
-
-
 class PortResource(object):
     exposed = True
 
     def _set_headers(self):
+        cherrypy.response.headers['X-API-Version'] = API_VERSION
         cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
         cherrypy.response.headers['Allow'] = 'GET, OPTIONS'
         cherrypy.response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
@@ -53,6 +51,8 @@ class BoardResource(object):
         raise _cperror.HTTPError(404, json_error("Board not found"))
 
     def _set_headers(self, board_pk=None, pin_number=None):
+        cherrypy.response.headers['X-API-Version'] = API_VERSION
+
         options = ['GET', 'PUT']
         if board_pk is not None:
             options = ['GET', 'DELETE']
