@@ -4,7 +4,7 @@ import glob
 
 from serial.serialutil import SerialException
 from serializer import ModelsEncoder
-from models import Board
+from models import Board, PIN_TYPES
 from storage import boards
 from exception import InvalidConfigurationException, json_error
 from cherrypy import _cperror
@@ -52,11 +52,11 @@ class BoardResource(object):
             return boards[board_pk]
         raise _cperror.HTTPError(404, json_error("Board not found"))
 
-    def _set_headers(self, board_pk=None, pin_identifier=None):
+    def _set_headers(self, board_pk=None, pin_number=None):
         options = ['GET', 'PUT']
         if board_pk is not None:
             options = ['GET', 'DELETE']
-        if pin_identifier is not None:
+        if pin_number is not None:
             options = ['GET', 'POST']
         cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
         cherrypy.response.headers['Access-Control-Allow-Methods'] = ', '.join(options)
@@ -73,21 +73,28 @@ class BoardResource(object):
         cherrypy.response.status = 400
         raise _cperror.HTTPError(400, json_error("Content-Type header can only be 'application/json' or 'application/x-www-form-urlencoded'"))
 
-    @cherrypy.popargs('board_pk', 'pin_identifier')
-    def OPTIONS(self, board_pk=None, pin_identifier=None, *args, **kwargs):
-        self._set_headers(board_pk=board_pk, pin_identifier=pin_identifier)
+    def _check_pin_type(self, pin_type):
+        if pin_type not in PIN_TYPES:
+            cherrypy.response.status = 400
+            raise _cperror.HTTPError(400, json_error("Invalid pin type."))
+
+    @cherrypy.popargs('board_pk', 'pin_type', 'pin_number')
+    def OPTIONS(self, board_pk=None, pin_type=None, pin_number=None, *args, **kwargs):
+        self._check_pin_type(pin_type)
+        self._set_headers(board_pk=board_pk, pin_number=pin_number)
         return cherrypy.response.headers['Allow']
 
-    @cherrypy.popargs('board_pk', 'pin_identifier')
-    def GET(self, board_pk=None, pin_identifier=None, *args, **kwargs):
-        self._set_headers(board_pk=board_pk, pin_identifier=pin_identifier)
+    @cherrypy.popargs('board_pk', 'pin_type', 'pin_number')
+    def GET(self, board_pk=None, pin_type=None, pin_number=None, *args, **kwargs):
+        self._check_pin_type(pin_type)
+        self._set_headers(board_pk=board_pk, pin_number=pin_number)
 
         if board_pk is None:
             return json.dumps(boards.values(), cls=ModelsEncoder)
 
         board = self._get_board(board_pk)
-        if pin_identifier is not None:
-            return board.get_pin(pin_identifier).to_json()
+        if pin_number is not None:
+            return board.pins[pin_type][pin_number].to_json()
         return board.to_json()
 
     def PUT(self, *args, **kwargs):
@@ -105,20 +112,22 @@ class BoardResource(object):
         cherrypy.response.status = 201
         return self.content.to_json()
 
-    @cherrypy.popargs('board_pk', 'pin_identifier')
-    def POST(self, board_pk=None, pin_identifier=None, *args, **kwargs):
-        self._set_headers(board_pk=board_pk, pin_identifier=pin_identifier)
+    @cherrypy.popargs('board_pk', 'pin_type', 'pin_number')
+    def POST(self, board_pk=None, pin_type=None, pin_number=None, *args, **kwargs):
+        self._check_pin_type(pin_type)
+        self._set_headers(board_pk=board_pk, pin_number=pin_number)
 
-        if board_pk is None or pin_identifier is None:
+        if board_pk is None or pin_number is None:
             cherrypy.response.status = 400
             raise _cperror.HTTPError(400, json_error("Board and/or Pin need to be specified."))
+
         # set the pin
         data = self._payload(*args, **kwargs)
         value = float(data['value'])
         mode = data.get('mode')
 
         board = self._get_board(board_pk)
-        pin = board.get_pin(pin_identifier)
+        pin = board.pins[pin_type][pin_number]
         try:
             pin.setup(mode=mode)
         except InvalidConfigurationException:

@@ -232,11 +232,11 @@ Run `httpfirmata_run.py` from the `bin` directory.
             Content-Type: application/json
             Connection: close
 
-* `/boards/<board_id>/<pin_identifier>/`
+* `/boards/<board_id>/<pin_type>/<pin_identifier>/`
 
     * `POST`: write to the pin
 
-        `curl -x POST http://localhost:8000/boards/1/d13/ -H 'Content-Type: application/json' --data '{"mode": "output", "value": 1}'`
+        `curl -x POST http://localhost:8000/boards/1/digital/13/ -H 'Content-Type: application/json' --data '{"mode": "output", "value": 1}'`
 
         response:
 
@@ -261,7 +261,7 @@ Run `httpfirmata_run.py` from the `bin` directory.
 
     * `GET`: read the pin's value
 
-        `curl http://localhost:8000/boards/1/d13/`
+        `curl http://localhost:8000/boards/1/digital/13/`
 
         response:
 
