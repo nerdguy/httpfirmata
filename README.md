@@ -8,9 +8,13 @@ Requires [PyFirmata](https://bitbucket.org/tino/pyfirmata/src/).
 
 ## Usage
 
-Run `httpfirmata_run.py` from the `bin` directory.
+Run `httpfirmata_run.py` from the `bin` directory. The server will listen to 0.0.0.0:8000
 
 ## Endpoints
+
+All parameters to the call can be submitted either as json or form-urlencoded data. The `Content-Type` header is required to specify which serialization is used.
+
+All responses will contain headers for CORS.
 
 * `/v2/ports/`
 
