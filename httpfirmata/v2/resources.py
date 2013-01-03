@@ -3,10 +3,10 @@ import json
 import glob
 
 from serial.serialutil import SerialException
-from serializer import ModelsEncoder
-from models import Board, PIN_TYPES
-from storage import boards
-from exception import InvalidConfigurationException, json_error
+from .serializer import ModelsEncoder
+from .models import Board, PIN_TYPES
+from .storage import boards
+from .exception import InvalidConfigurationException, json_error
 from cherrypy import _cperror
 from . import API_VERSION
 

@@ -1,7 +1,7 @@
 import os
 from setuptools import setup
 
-from httpfirmata import __version__
+from .httpfirmata import __version__
 
 
 def read(fname):

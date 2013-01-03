@@ -1,6 +1,6 @@
 import cherrypy
-from v1 import resources as resources_v1
-from v2 import resources as resources_v2
+from .v1 import resources as resources_v1
+from .v2 import resources as resources_v2
 
 
 conf = {
