@@ -106,7 +106,7 @@ All responses will contain headers for CORS.
             }
     * `GET`: List all connected boards
 
-        `curl http://localhost:8000/v2/v2/boards/`
+        `curl http://localhost:8000/v2/boards/`
 
         response:
 
