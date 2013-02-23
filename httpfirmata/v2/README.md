@@ -1,6 +1,6 @@
 # HTTPFirmata
 
-A [CherryPy](http://www.cherrypy.org) server with an API that talks Firmata to Arduino.
+A [Flask](http://flask.pocoo.org) server with an API that talks Firmata to Arduino.
 
 This is not intended to be used in production or anywhere publicly accessible. 
 
@@ -8,7 +8,7 @@ Requires [PyFirmata](https://bitbucket.org/tino/pyfirmata/src/).
 
 ## Usage
 
-Run `httpfirmata_run.py` from the `bin` directory.
+Run `httpfirmata_run.py` from the `bin` directory. The server will listen to 0.0.0.0:8000
 
 ## Endpoints
 
@@ -106,7 +106,7 @@ All responses will contain headers for CORS.
             }
     * `GET`: List all connected boards
 
-        `curl http://localhost:8000/v2/v2/boards/`
+        `curl http://localhost:8000/v2/boards/`
 
         response:
 

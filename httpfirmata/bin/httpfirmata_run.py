@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-import cherrypy
-from httpfirmata.server import conf, root
+from httpfirmata.server import app
 
-cherrypy.quickstart(root, '/', conf)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000)

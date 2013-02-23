@@ -1,9 +1,11 @@
 import json
+import traceback
 
 from pyfirmata import Arduino
 from .exception import InvalidPinException, InvalidConfigurationException
 from .storage import boards
 from .serializer import ModelsEncoder
+from .utils import cached_property
 
 
 class SerializableModel(object):
@@ -47,7 +49,7 @@ class Pin(SerializableModel):
             return '%s:%d:%s' % (PIN_TYPES[self.type], self.number, PIN_MODES[self.mode])
         raise ValueError
 
-    @property
+    @cached_property
     def board(self):
         return boards[self.board_pk]
 
@@ -97,11 +99,6 @@ class Pin(SerializableModel):
             return pin.value
         return None
 
-    def to_json(self):
-        resp = super(Pin, self).to_json()
-        self.release()
-        return resp
-
 
 class Board(SerializableModel):
     pk = None
@@ -116,23 +113,21 @@ class Board(SerializableModel):
         self.pk = pk
         self.port = port
         self._board = Arduino(self.port)
-        self.pins = dict(((str(i), Pin(pk, i)) for i in range(14)))
+        self.pins = dict(((i, Pin(pk, i)) for i in range(14)))
 
         [setattr(self, k, v) for k, v in kwargs.items()]
         super(Board, self).__init__(*args, **kwargs)
 
     def __del__(self):
-        self.disconnect()
+        try:
+            self.disconnect()
+        except:
+            print(traceback.format_exc())
 
     def disconnect(self):
         for pin in self.written_pins:
             pin.write(0)
         return self._board.exit()
-
-    def to_json(self):
-        from serializer import ModelsEncoder
-
-        return json.dumps(self, cls=ModelsEncoder)
 
     def firmata_pin(self, identifier):
         return self._board.get_pin(identifier)

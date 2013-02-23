@@ -1,38 +1,22 @@
-import cherrypy
-from .v1 import resources as resources_v1
-from .v2 import resources as resources_v2
+from flask import Flask
+
+from httpfirmata.v1 import views as v1
+from httpfirmata.v2 import views as v2
 
 
-conf = {
-    'global': {
-        'server.socket_host': '127.0.0.1',
-        'server.socket_port': 8000,
-    },
-    '/': {
-        'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
-    },
+app = Flask(__name__)
 
-}
+app.add_url_rule('/v2/boards/<int:board_pk>/<pin_type>/<int:pin_number>/', view_func=v2.PinDetailAPI.as_view('v2:pin_detail'))
+app.add_url_rule('/v2/boards/<int:board_pk>/', view_func=v2.BoardDetailAPI.as_view('v2:board_detail'))
+app.add_url_rule('/v2/boards/', view_func=v2.BoardListAPI.as_view('v2:board_list'))
+app.add_url_rule('/v2/ports/', view_func=v2.PortListAPI.as_view('v2:port_list'))
 
+app.add_url_rule('/v1/boards/<int:board_pk>/<int:pin_number>/', view_func=v1.PinDetailAPI.as_view('v1:pin_detail'))
+app.add_url_rule('/v1/boards/<int:board_pk>/', view_func=v1.BoardDetailAPI.as_view('v1:board_detail'))
+app.add_url_rule('/v1/boards/', view_func=v1.BoardListAPI.as_view('v1:board_list'))
+app.add_url_rule('/v1/ports/', view_func=v1.PortListAPI.as_view('v1:port_list'))
 
-class Root(object):
-    pass
-
-
-class VersionedAPI(object):
-    pass
-
-
-root = Root()
-#root = VersionedAPI()
-root.ports = resources_v1.PortResource()
-root.boards = resources_v1.BoardResource()
-
-root.v1 = VersionedAPI()
-root.v1.ports = resources_v1.PortResource()
-root.v1.boards = resources_v1.BoardResource()
-
-
-root.v2 = VersionedAPI()
-root.v2.ports = resources_v2.PortResource()
-root.v2.boards = resources_v2.BoardResource()
+app.add_url_rule('/boards/<int:board_pk>/<int:pin_number>/', view_func=v1.PinDetailAPI.as_view('pin_detail'))
+app.add_url_rule('/boards/<int:board_pk>/', view_func=v1.BoardDetailAPI.as_view('board_detail'))
+app.add_url_rule('/boards/', view_func=v1.BoardListAPI.as_view('board_list'))
+app.add_url_rule('/ports/', view_func=v1.PortListAPI.as_view('port_list'))

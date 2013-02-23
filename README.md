@@ -1,6 +1,6 @@
 # HTTPFirmata
 
-A [CherryPy](http://www.cherrypy.org) server with an API that talks Firmata to Arduino.
+A [Flask](http://flask.pocoo.org) server with an API that talks Firmata to Arduino.
 
 This is not intended to be used in production or anywhere publicly accessible. 
 
