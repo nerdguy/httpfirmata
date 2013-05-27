@@ -57,7 +57,7 @@ class GenericAPIView(MethodView):
 
 class PortListAPI(GenericAPIView):
     def get(self):
-        ports = glob.glob('/dev/cu.*')
+        ports = glob.glob('/dev/cu.*') + glob.glob('/dev/ttyACM*')
         resp = make_response(json.dumps(ports))
         return resp
 
