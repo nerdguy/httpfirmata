@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import glob
 import json
 
@@ -7,7 +9,7 @@ from flask.views import MethodView
 
 from . import API_VERSION
 from .exception import InvalidConfigurationException, ObjectNotFoundException, InvalidRequestException, json_error
-from .models import Board, PIN_TYPES
+from .models import Board
 from .serializer import ModelsEncoder
 from .storage import boards
 
