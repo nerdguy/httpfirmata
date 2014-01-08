@@ -3,7 +3,8 @@ from __future__ import absolute_import
 import json
 import traceback
 
-from pyfirmata import Arduino
+from pyfirmata import Board as FirmataBoard
+from pyfirmata import BOARDS
 from .exception import InvalidPinException, InvalidConfigurationException
 from .storage import boards
 from .serializer import ModelsEncoder
@@ -31,6 +32,8 @@ PIN_TYPES = {
     'analog': 'a',
     'digital': 'd'
 }
+
+DEFAULT_LAYOUT = BOARDS['arduino']
 
 
 class Pin(SerializableModel):
@@ -119,10 +122,10 @@ class Board(SerializableModel):
 
     json_export = ('pk', 'port', 'pins', 'url')
 
-    def __init__(self, pk, port, *args, **kwargs):
+    def __init__(self, pk, port, layout=DEFAULT_LAYOUT, *args, **kwargs):
         self.pk = pk
         self.port = port
-        self._board = Arduino(self.port)
+        self._board = FirmataBoard(self.port, layout)
         self.pins = {
             'analog': dict(((pin.pin_number, Pin(pk, pin.pin_number, type='analog')) for pin in self._board.analog)),
             'digital': dict(((pin.pin_number, Pin(pk, pin.pin_number, type='digital')) for pin in self._board.digital))
