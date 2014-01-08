@@ -39,7 +39,7 @@ class GenericAPIView(MethodView):
         if content_type == 'application/json':
             return json.loads(request.data)
         if content_type == 'application/x-www-form-urlencoded':
-            return request.form
+            return request.form.to_dict()
         raise InvalidRequestException("Content-Type header can only be 'application/json' or 'application/x-www-form-urlencoded'")
 
     def dispatch_request(self, *args, **kwargs):
