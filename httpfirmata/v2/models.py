@@ -124,8 +124,8 @@ class Board(SerializableModel):
         self.port = port
         self._board = Arduino(self.port)
         self.pins = {
-            'analog': dict(((i, Pin(pk, i, type='analog')) for i in range(6))),
-            'digital': dict(((i, Pin(pk, i, type='digital')) for i in range(14)))
+            'analog': dict(((pin.pin_number, Pin(pk, pin.pin_number, type='analog')) for pin in self._board.analog)),
+            'digital': dict(((pin.pin_number, Pin(pk, pin.pin_number, type='digital')) for pin in self._board.digital))
         }
 
         [setattr(self, k, v) for k, v in kwargs.items()]
