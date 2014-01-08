@@ -2,7 +2,8 @@ from __future__ import absolute_import
 import os
 from setuptools import setup, find_packages
 
-__version__ = (0, 0, 7)
+VERSION = "0.0.8"
+__version__ = tuple(map(int, VERSION.split('.')))
 
 
 def read(fname):
@@ -16,7 +17,7 @@ requirements = [
 
 setup(
     name="HTTPFirmata",
-    version=".".join(map(str, __version__)),
+    version=VERSION,
     description="A CherryPy server with an API that talks Firmata to Arduino",
     long_description=read('README.md'),
     url='https://github.com/nerdguy/httpfirmata',
